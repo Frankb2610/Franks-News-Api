@@ -36,7 +36,7 @@ const connection = require('../db/connection')
                 })
             })
         })
-        describe.only('error tests', () => {
+        describe('error tests', () => {
             test('Invalid endpoint responds with the correct error message', () => {
                 return request(app)
                 .get('/api/topicss')
