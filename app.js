@@ -5,6 +5,7 @@ const { getTopics } = require('./controllers/news-controller')
 
 app.get('/api/topics', getTopics)
 
+
 app.all('/*', (req, res, next) => {
     next({status: 404});
   })
