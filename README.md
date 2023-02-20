@@ -1,1 +1,1 @@
-To run this locally the user must set up a .eve.development and .env.test file to link the PGDATABASE to the nc_news_test and nc_news (development) databases. Run the provided setup-dbs script and seed script to initialise and populate both databases
+To run this locally the user must set up a .eve.development and .env.test file to link the PGDATABASE to the nc_news_test and nc_news (development) databases. Run the provided setup-dbs script and seed script to initialise and populate both databases.
