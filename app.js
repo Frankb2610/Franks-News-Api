@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const { getTopics } = require('./controllers/news-controller')
+const { customErrorHandling, errorHandling500 } = require('./error-handling')
 
 
 app.get('/api/topics', getTopics)
@@ -11,18 +12,9 @@ app.all('/*', (req, res, next) => {
   })
 
 
-app.use((err, req, res, next) => {
-    if (err.status === 404) {
-        res.status(404).send({msg : "404 not found!!!"})
-    } else {
-        next(err)
-    }
-})
+app.use(customErrorHandling)
 
-app.use((err, req, res, next) => {
-    console.log(err);
-    res.status(500).send('Server Error!');
-  });
+app.use(errorHandling500)
 
 
 module.exports = app
