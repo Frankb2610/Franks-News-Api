@@ -1,16 +1,19 @@
-exports.customErrorHandling =  (err, req, res, next) => {
-    if (err.status === 400) {
-      res.status(400).send({ msg: err.msg })
-    } else if (err.status === 404) {
-      res.status(404).send({msg: "404 not found!!!"})
+exports.nonExistentPaths = (req, res, next) => {
+    res.status(404).send({msg : "path not found"})
+}
+
+exports.errorHandling400 = (err, req, res, next) => {
+    if (err.status && err.msg) {
+        response.status(500).send({ msg: err.msg })
     } else {
-      next(err);
+        next(err)
     }
-  },
+}
 
-
-
-exports.errorHandling500 = (err, req, res, next) => {
-    console.log(err);
-    res.status(500).send('Server Error!');
+ exports.errorHandling500= (err, req, res, next) => {
+    if (err.status && err.msg) {
+        response.status(400).send({ msg: err.msg })
+    } else {
+        next(err)
+    }
 }
