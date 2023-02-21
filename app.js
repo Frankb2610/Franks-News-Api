@@ -1,20 +1,20 @@
 const express = require('express')
 const app = express()
-const { getTopics } = require('./controllers/news-controller')
-const { customErrorHandling, errorHandling500 } = require('./error-handling')
+const { getTopics, getArticles } = require('./controllers/news-controller')
+const { errorHandling400, errorHandling500, nonExistentPaths } = require('./error-handling')
 
+app.use(express.json())
 
 app.get('/api/topics', getTopics)
+app.get('/api/articles', getArticles)
 
+app.use((req, res, next) => {
+    res.status(404).send({ msg: 'Path not found' })
+})
 
-app.all('/*', (req, res, next) => {
-    next({status: 404});
-  })
-
-
-app.use(customErrorHandling)
-
-app.use(errorHandling500)
+app.use(nonExistentPaths);
+app.use(errorHandling400);
+app.use(errorHandling500);
 
 
 module.exports = app
