@@ -88,7 +88,7 @@ require('jest-sorted')
                 .expect(404)
                 .then(({body}) => {
                     const {msg} = body;
-                    expect(msg).toBe("path not found")
+                    expect(msg).toBe("Path not found")
                 })
 
             });
