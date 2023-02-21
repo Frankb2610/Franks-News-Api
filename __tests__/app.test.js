@@ -27,6 +27,7 @@ const connection = require('../db/connection')
                 .expect(200)
                 .then(( {body} ) => {
                     const {topics} = body
+                    expect(topics.length).toBe(3)
                     topics.forEach((topic) => {
                         expect(topic).toMatchObject({
                             description: expect.any(String),
