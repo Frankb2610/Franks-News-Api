@@ -120,6 +120,45 @@ beforeEach(() => seed(testData));
               })
             })
          })
+         describe('GET /api/articles/:article_id/comments', () => {
+            test('responds 200 when given correct article id', () => {
+              return request(app)
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(({body}) => {
+              expect(body.length).toBe(11)
+              })
+            });
+            test('Descending Order', () => {
+              return request(app)
+              .get('/api/articles/1/comments')
+              .expect(200)
+              .then(( {body} ) => {
+              expect(body).toBeSortedBy('created_at', {
+                  descending: true,
+                  coerce: true
+              });
+              });
+          })
+            test('responds 200 when given correct article id but there is no comments', () => {
+              return request(app)
+              .get('/api/articles/4/comments')
+              .expect(200)
+              .then(({body}) => {
+              expect(body.length).toBe(1)
+              expect(body[0]).toBe("No comments")
+              })
+            });
+            test('responds 404 when passed number that doesnt exist in database', () => {
+              return request(app)
+                .get('/api/articles/9000/comments')
+                .expect(404)
+                .then(({ body }) => {
+                  const { msg } = body;
+                  expect(msg).toBe('path containing this id is not valid');
+                })
+            });
+          });
      });
          
 
