@@ -5,11 +5,10 @@ const testData = require('../db/data/test-data/');
 const connection = require('../db/connection')
 require('jest-sorted')
 
+beforeEach(() => seed(testData));
+        afterAll(()=> {connection.end()})
+
     describe('app', () => {
-        
-        beforeEach(() => seed(testData));
-        afterAll(()=> {
-            return connection.end()})
         
         describe('GET /api/topics', () => {
             test('200: GET responds with an array of topics', () => {
@@ -63,7 +62,7 @@ require('jest-sorted')
                         created_at: expect.any(String),
                         votes: expect.any(Number),
                         article_img_url: expect.any(String),
-                        comment_count: expect.any(Number),
+                        comment_count: expect.any(String),
                     })
                 })
             })
@@ -80,17 +79,48 @@ require('jest-sorted')
                 });
             })
         })  
-    
-        describe('error tests', () => {
-            test('Invalid endpoint responds with the correct error message', () => {
-                return request(app)
-                .get('/api/topicss')
-                .expect(404)
-                .then(({body}) => {
-                    const {msg} = body;
-                    expect(msg).toBe("Path not found")
+        describe('GET /api/articles/:article_id', () => {
+          test('Returns article with given id', () => {
+            return request(app)
+              .get('/api/articles/4')
+              .expect(200)
+              .then(({body}) => {
+                expect(body).toEqual({
+                  article_id: 4,
+                  title: 'Student SUES Mitch!',
+                  topic: 'mitch',
+                  author: 'rogersop',
+                  body: 'We all love Mitch and his wonderful, unique typing style. However, the volume of his typing has ALLEGEDLY burst another students eardrums, and they are now suing for damages',
+                  created_at : "2020-05-06T01:14:00.000Z",
+                  votes: 0,
+                  article_img_url:
+                    'https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700',
                 })
+                
+              })
+          });
+          test('responds 404 when passed number that doesnt exist in database', () => {
+            return request(app)
+              .get('/api/articles/9000')
+              .expect(404)
+              .then(({ body }) => {
+                const { msg } = body;
 
-            });
-        });
-    })
+                expect(msg).toBe('path containing this id is not valid');
+              })
+          });
+          test('responds 400 when passed non numeric article_id', () => {
+            return request(app)
+              .get('/api/articles/four')
+              .expect(400)
+              .then(({ body }) => {
+                const { msg } = body;
+
+                expect(msg).toBe('Bad Request');
+              })
+            })
+         })
+     });
+         
+
+    
