@@ -1,20 +1,15 @@
 const express = require('express')
 const app = express()
-const { getTopics, getArticles } = require('./controllers/news-controller')
-const { errorHandling400, errorHandling500, nonExistentPaths } = require('./error-handling')
-
-app.use(express.json())
+const { getTopics, getArticles, getArticleById } = require('./controllers/news-controller')
+const { errorHandlingCustom, errorHandling500, errorHandlingPSQL400 } = require('./error-handling')
 
 app.get('/api/topics', getTopics)
 app.get('/api/articles', getArticles)
+app.get('/api/articles/:article_id', getArticleById)
 
-app.use((req, res, next) => {
-    res.status(404).send({ msg: 'Path not found' })
-})
 
-app.use(nonExistentPaths);
-app.use(errorHandling400);
+app.use(errorHandlingCustom);
+app.use(errorHandlingPSQL400);
 app.use(errorHandling500);
-
 
 module.exports = app
