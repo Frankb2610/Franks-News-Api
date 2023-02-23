@@ -31,4 +31,32 @@ exports.fetchArticleById = (inputId) => {
         return result.rows[0]
     })
 }
+
+exports.fetchArticleIdComments = (inputId) => {
+
+    return db
+    .query(`SELECT * FROM comments WHERE article_id = $1`, [inputId])
+    .then((result) => {
+        if (result.rowCount=== 0) {
+            return db
+            .query(`SELECT article_id FROM articles
+            ORDER BY created_at DESC`)
+            .then((result2) => {
+               
+                array = result2.rows
+               filteredArray = array.filter(id  => id.article_id === parseInt(inputId)) 
+                if(filteredArray.length === 0) {
+                    return Promise.reject('invalid id entered')
+                } else {
+                    return ["No comments"]
+                    
+                }
+            })
+        } else {
+            return result.rows
+        }
+        
+    })
+
+}
   
