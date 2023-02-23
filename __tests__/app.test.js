@@ -9,7 +9,16 @@ beforeEach(() => seed(testData));
         afterAll(()=> {connection.end()})
 
     describe('app', () => {
-        
+        describe('Throw error for all wrong paths', () => {
+          test('GET /api/monkeys', () => {
+            return request(app)
+            .get('/api/monkeys')
+            .expect(404)
+            .then(({body})=> {
+              const {msg} = body
+              expect(msg).toBe("Wrong Path")
+            })        
+           });
         describe('GET /api/topics', () => {
             test('200: GET responds with an array of topics', () => {
                 return request(app)
@@ -145,8 +154,8 @@ beforeEach(() => seed(testData));
               .get('/api/articles/4/comments')
               .expect(200)
               .then(({body}) => {
-              expect(body.length).toBe(1)
-              expect(body[0]).toBe("No comments")
+              expect(body.length).toBe(0)
+              expect(body).toEqual([])
               })
             });
             test('responds 404 when passed number that doesnt exist in database', () => {
@@ -160,6 +169,6 @@ beforeEach(() => seed(testData));
             });
           });
      });
-         
+    })    
 
     

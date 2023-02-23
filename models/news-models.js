@@ -48,7 +48,7 @@ exports.fetchArticleIdComments = (inputId) => {
                 if(filteredArray.length === 0) {
                     return Promise.reject('invalid id entered')
                 } else {
-                    return ["No comments"]
+                    return result.rows
                     
                 }
             })
