@@ -145,8 +145,8 @@ beforeEach(() => seed(testData));
               .get('/api/articles/4/comments')
               .expect(200)
               .then(({body}) => {
-              expect(body.length).toBe(1)
-              expect(body[0]).toBe("No comments")
+              expect(body.length).toBe(0)
+              expect(body).toEqual([])
               })
             });
             test('responds 404 when passed number that doesnt exist in database', () => {
@@ -159,7 +159,54 @@ beforeEach(() => seed(testData));
                 })
             });
           });
-     });
+          describe('"POST/api/articles/:article_id/comments"', () => {
+            test('Returns 201 and and and object with key of comment and message containing the body', () => {
+              return request(app)
+              .post(("/api/articles/4/comments"))
+              .send({ username: "butter_bridge", body: "New comment" })
+              .expect(201)
+              .then(({body}) => {
+                const {comment} = body
+                expect(comment.author).toBe("butter_bridge");
+                 expect(comment.comment_id).toBe(19);
+                   expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: expect.any(Number),
+                  });
+                })
+              });
+              test("expect 400 when missing username", () => {
+                return request(app)
+                .post("/api/articles/2/comments")
+                .send({
+                    username: '',
+                    body: 'such a big fan wow'
+                }).expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Username required')
+                })
+    
+            })
+    
+            test("expect 400 when missing body", () => {
+                return request(app)
+                .post("/api/articles/2/comments")
+                .send({
+                    username: 'icellusedkars',
+                    body: ''
+                }).expect(400)
+                .then(({ body }) => {
+                    expect(body.msg).toBe('Body required')
+                })
+    
+            })
+
+          });      
+        })
          
 
     

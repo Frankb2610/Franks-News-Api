@@ -1,4 +1,4 @@
-const {fetchTopics, fetchArticles, fetchArticleById, fetchArticleIdComments} = require('../models/news-models')
+const {fetchTopics, fetchArticles, fetchArticleById, fetchArticleIdComments, insertComment} = require('../models/news-models')
 
 exports.getTopics = (req, res, next) => {
     fetchTopics().then((topicsArray) =>{
@@ -20,7 +20,8 @@ exports.getArticles = (req, res, next) => {
 }
 
 exports.getArticleById = (req, res, next) => {
-   const {article_id} = req.params;
+   
+    const {article_id} = req.params;
     fetchArticleById(article_id).then((article)=> {
         res.status(200).send(article)
     })
@@ -33,10 +34,31 @@ exports.getArticleById = (req, res, next) => {
 exports.getArticleIdComments = (req, res, next) => {
     const {article_id} = req.params;
      fetchArticleIdComments(article_id).then((comments)=> {
-         res.status(200).send(comments)
+        res.status(200).send(comments)
      })
      .catch((err) => {
          next(err)
      })
      
  }
+
+ exports.postComment = (req, res, next) => {
+    const {article_id} = req.params
+    const {username, body} = req.body
+        insertComment(article_id, username, body)
+        .then((commentObj) => {
+          res.status(201).send({ comment: commentObj });
+        })
+        .catch((error) => {
+          next(error);
+        });
+     }
+   
+    
+    
+           
+        
+    
+
+
+
