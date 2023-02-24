@@ -76,7 +76,6 @@ const insertComment = (article_id, username, body) => {
         SELECT * FROM users
         WHERE username = $1;`, [username])
         .then((result)=> {
-            console.log(result.rows[0])
             if (!result.rows[0]){
                 return Promise.reject('invalid username entered')
             } else {
