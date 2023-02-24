@@ -13,6 +13,8 @@ exports.errorHandlingPSQL400 = (error, request, response, next) => {
       response.status(400).send({ msg: "Body required" });
     } else  if (error === "username required") {
       response.status(400).send({ msg: "Username required" });
+    } else  if (error === "invalid username entered") {
+      response.status(404).send({ msg: "Valid username required" });
     } else  {
       next(error);
     }

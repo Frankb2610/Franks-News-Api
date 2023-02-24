@@ -1,4 +1,5 @@
 const db = require('../db/connection.js')
+const users = require('../db/data/test-data/users')
 
 const fetchTopics = () => {
     return db
@@ -7,6 +8,7 @@ const fetchTopics = () => {
         return result.rows
     })
 }
+
 
 const fetchArticles = () => {
 
@@ -20,6 +22,8 @@ ORDER BY created_at DESC;
         return data;
     });
 }
+
+
 
 const fetchArticleById = (inputId) => {
     return db
@@ -67,21 +71,34 @@ const insertComment = (article_id, username, body) => {
         if (!body) {
             return Promise.reject('body required')
         } 
-    
-        return fetchArticleById(article_id).then(()=> {
+        
+        return db.query(`
+        SELECT * FROM users
+        WHERE username = $1;`, [username])
+        .then((result)=> {
+            console.log(result.rows[0])
+            if (!result.rows[0]){
+                return Promise.reject('invalid username entered')
+            } else {
+                return fetchArticleById(article_id).then((article)=> {
+         
+                    return db.query(`
+                    INSERT INTO comments
+                    (article_id, author, body)
+                    VALUES
+                    ($1, $2, $3)
+                    RETURNING *;
+                    `, [article_id, username, body]
+                ).then((result) => {
             
-            return db.query(`
-            INSERT INTO comments
-            (article_id, author, body)
-            VALUES
-            ($1, $2, $3)
-            RETURNING *;
-            `, [article_id, username, body]
-        ).then((result) => {
-    
-            return result.rows[0];
-        });
+                    return result.rows[0];
+                });
+                })
+            }
+           
         })
+      
+        
         
     }
 

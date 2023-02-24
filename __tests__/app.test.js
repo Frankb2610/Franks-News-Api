@@ -178,35 +178,87 @@ beforeEach(() => seed(testData));
                     article_id: expect.any(Number),
                   });
                 })
-              });
-              test("expect 400 when missing username", () => {
-                return request(app)
-                .post("/api/articles/2/comments")
-                .send({
-                    username: '',
-                    body: 'such a big fan wow'
-                }).expect(400)
-                .then(({ body }) => {
-                    expect(body.msg).toBe('Username required')
-                })
-    
             })
-    
-            test("expect 400 when missing body", () => {
-                return request(app)
-                .post("/api/articles/2/comments")
-                .send({
-                    username: 'icellusedkars',
-                    body: ''
-                }).expect(400)
-                .then(({ body }) => {
-                    expect(body.msg).toBe('Body required')
+            test('Ignores unecessary properties', () => {
+              return request(app)
+              .post(("/api/articles/4/comments"))
+              .send({ username: "butter_bridge", body: "New comment", Unnecessary: "Property" })
+              .expect(201)
+              .then(({body}) => {
+                const {comment} = body
+                expect(comment.author).toBe("butter_bridge");
+                 expect(comment.comment_id).toBe(19);
+                   expect(comment).toMatchObject({
+                    comment_id: expect.any(Number),
+                    votes: expect.any(Number),
+                    created_at: expect.any(String),
+                    author: expect.any(String),
+                    body: expect.any(String),
+                    article_id: expect.any(Number),
+                  });
                 })
-    
+            });
+            test("expect 400 when missing username", () => {
+              return request(app)
+              .post("/api/articles/2/comments")
+              .send({
+                  username: '',
+                  body: 'I have no username'
+              }).expect(400)
+              .then(({ body }) => {
+                  expect(body.msg).toBe('Username required')
+              })
+  
+          })
+  
+          test("expect 400 when missing body", () => {
+              return request(app)
+              .post("/api/articles/2/comments")
+              .send({
+                  username: 'No Body given',
+                  body: ''
+              }).expect(400)
+              .then(({ body }) => {
+                  expect(body.msg).toBe('Body required')
+                })
+              })
+          test("expect 400 when id given is not in database", () => {
+            return request(app)
+            .post("/api/articles/2000/comments")
+            .send({
+                username: "butter_bridge",
+                body: 'This article does not exist'
+            }).expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('path containing this id is not valid')
+              })
             })
-
-          });      
-        })
+          })
+        test('Expect 400 when Non numeric invalid id', () => {
+          return request(app)
+          .post("/api/articles/four/comments")
+          .send({
+              username: "butter_bridge",
+              body: 'This article does not exist'
+          }).expect(400)
+          .then(({ body }) => {
+              expect(body.msg).toBe('Bad Request')
+            })
+          })
+          test('expect 404 when username does not exist', () => {
+            return request(app)
+            .post("/api/articles/4/comments")
+            .send({
+                username: "butter_bridge Fake",
+                body: 'This user does not exist'
+            }).expect(404)
+            .then(({ body }) => {
+                expect(body.msg).toBe('Valid username required')
+              })
+          });
+        });
+   
+  
          
 
     
