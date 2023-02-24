@@ -79,7 +79,7 @@ const insertComment = (article_id, username, body) => {
             `, [article_id, username, body]
         ).then((result) => {
     
-            return result.rows[0];
+            return result.rows[0];branch
         });
         })
         
