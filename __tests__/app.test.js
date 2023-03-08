@@ -256,29 +256,29 @@ beforeEach(() => seed(testData));
                 expect(body.msg).toBe('Valid username required')
               })
           });
-          // describe.only("PATCH /api/articles/:article_id", () => {
-          //   test("Should return  article with updated votes from given article_id", () => {
-          //       return request(app).patch("/api/articles/1").send({ inc_votes: 10 }).expect(200).then(({ body }) => {
-          //           const { article } = body;
-          //           expect(article.article_id).toBe(1);
-          //           expect(article.votes).toBe(110);
+          describe("PATCH /api/articles/:article_id", () => {
+            test("Should return  article with updated votes from given article_id", () => {
+                return request(app).patch("/api/articles/1").send({ inc_votes: 10 }).expect(200).then(({ body }) => {
+                    const { article } = body;
+                    expect(article.article_id).toBe(1);
+                    expect(article.votes).toBe(110);
     
-          //           expect(article).toMatchObject({
-          //               author: expect.any(String),
-          //               title: expect.any(String),
-          //               article_id: expect.any(Number),
-          //               topic: expect.any(String),
-          //               created_at: expect.any(String),
-          //               votes: expect.any(Number),
-          //               article_img_url: expect.any(String),
-          //               body: expect.any(String),
-          //           });
-          //       });
-          //   })
-          //   test('should ', () => {
+                    expect(article).toMatchObject({
+                        author: expect.any(String),
+                        title: expect.any(String),
+                        article_id: expect.any(Number),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String),
+                        body: expect.any(String),
+                    });
+                });
+            })
+            test('should ', () => {
               
-          //   });
-          // })
+            });
+          })
 
       });
    
