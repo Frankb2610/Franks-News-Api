@@ -209,9 +209,9 @@ beforeEach(() => seed(testData));
                   expect(body.msg).toBe('Username required')
               })
   
-          })
+            })
   
-          test("expect 400 when missing body", () => {
+            test("expect 400 when missing body", () => {
               return request(app)
               .post("/api/articles/2/comments")
               .send({
@@ -222,7 +222,7 @@ beforeEach(() => seed(testData));
                   expect(body.msg).toBe('Body required')
                 })
               })
-          test("expect 400 when id given is not in database", () => {
+            test("expect 400 when id given is not in database", () => {
             return request(app)
             .post("/api/articles/2000/comments")
             .send({
@@ -234,7 +234,7 @@ beforeEach(() => seed(testData));
               })
             })
           })
-        test('Expect 400 when Non numeric invalid id', () => {
+         test('Expect 400 when Non numeric invalid id', () => {
           return request(app)
           .post("/api/articles/four/comments")
           .send({
@@ -256,7 +256,31 @@ beforeEach(() => seed(testData));
                 expect(body.msg).toBe('Valid username required')
               })
           });
-        });
+          describe.only("PATCH /api/articles/:article_id", () => {
+            test("Should return  article with updated votes from given article_id", () => {
+                return request(app).patch("/api/articles/1").send({ inc_votes: 10 }).expect(200).then(({ body }) => {
+                    const { article } = body;
+                    expect(article.article_id).toBe(1);
+                    expect(article.votes).toBe(110);
+    
+                    expect(article).toMatchObject({
+                        author: expect.any(String),
+                        title: expect.any(String),
+                        article_id: expect.any(Number),
+                        topic: expect.any(String),
+                        created_at: expect.any(String),
+                        votes: expect.any(Number),
+                        article_img_url: expect.any(String),
+                        body: expect.any(String),
+                    });
+                });
+            })
+            test('should ', () => {
+              
+            });
+          })
+
+      });
    
   
          
