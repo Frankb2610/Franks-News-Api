@@ -103,7 +103,7 @@ const insertComment = (article_id, username, body) => {
         }
     
         if(isNaN(inc_votes)){
-            return Promise.reject('invalid id')
+            return Promise.reject("number required")
         }
     
         return db.query(`UPDATE articles
@@ -114,7 +114,7 @@ const insertComment = (article_id, username, body) => {
         ).then((result) => {
             const data = result.rows
             if (data && data.length === 0) {
-                return Promise.reject('article not found')
+                return Promise.reject("invalid id entered")
             } else {
                 return data[0];
             }
